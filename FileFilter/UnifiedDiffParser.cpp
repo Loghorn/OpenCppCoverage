@@ -194,7 +194,6 @@ namespace FileFilter
 	{
 		const auto startIndex = ToFilePrefix.size();
 		const auto endIndex = line.find('\t');
-		
 		if (endIndex != std::string::npos)
 			return line.substr(startIndex, endIndex - startIndex);
 		return line.substr(startIndex);

@@ -75,6 +75,8 @@ namespace CppCoverage
 	//-------------------------------------------------------------------------
 	void CoverageRateComputer::ComputeCoverageRateCache(const Plugin::CoverageData& coverageData)
 	{
+		std::vector<std::wstring> computedFiles;
+
 		for (const auto& module : coverageData.GetModules())
 		{
 			CoverageRate moduleCoverageRate;
@@ -85,10 +87,16 @@ namespace CppCoverage
 
 				moduleCoverageRate += fileCoverageRate;
 				fileCoverageRate_.emplace(file.get(), fileCoverageRate);
+
+				std::wstring currentfile = file->GetPath().wstring();
+				if (std::find(computedFiles.begin(), computedFiles.end(), currentfile) == computedFiles.end())
+				{
+					coverageRate_ += fileCoverageRate;
+					computedFiles.push_back(currentfile);
+				}				
 			}
 
 			moduleCoverageRate_.emplace(module.get(), moduleCoverageRate);
-			coverageRate_ += moduleCoverageRate;
 		}
 	}
 	
