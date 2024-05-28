@@ -9,11 +9,57 @@
         <script src="{{THIRD_PARTY_PATH}}/RGraph/libraries/RGraph.common.tooltips.js" type="text/javascript"></script>
         <script src="{{THIRD_PARTY_PATH}}/RGraph/libraries/RGraph.pie.js" type="text/javascript"></script>
         <script src="{{THIRD_PARTY_PATH}}/JQuery/jquery-3.4.1.min.js"></script>
+        <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
     </head>
     <body>
     <script type="text/javascript">
+        function getColor(percentage) {
+            if(percentage > 95)
+            {
+                return 'Green';
+            }
+            else if (percentage > 80)
+            {
+                return 'YellowGreen';
+            }
+            else if (percentage > 60)
+            {
+                return 'Yellow';
+            }
+            else if (percentage > 40)
+            {
+                return 'Orange';
+            }
+            else if (percentage > 20)
+            {
+                return 'Red';
+            }
+            else
+            {
+                return 'DarkRed';
+            }
+        }
+
         $(document).ready(function ()
         {
+            var labels = [{{#ITEMS}}String.raw`{{NAME}}`.split('\\').pop(), {{/ITEMS}}];
+            labels.shift();
+            var values = [{{#ITEMS}} {{TOTAL_LINE}},{{/ITEMS}}];
+            values.shift();
+            var colors = [{{#ITEMS}} getColor({{COVER_RATE}}),{{/ITEMS}}];
+            colors.shift();
+            var parents = Array(labels.length).fill('');
+
+            var data = [{
+                type: "treemap",
+                labels: labels,
+                parents: parents,
+                values: values,
+                marker: {colors: colors}
+            }];
+
+            Plotly.newPlot('treemap', data);
+
             {{#ITEMS}}
             new RGraph.Pie('pi_{{ID}}', [{{EXECUTED_LINE}}, {{UNEXECUTED_LINE}}])
                 .set('labels', ['Cover {{COVER_RATE}}%','Uncover {{UNCOVER_RATE}}%'])
@@ -35,6 +81,7 @@
         <h4>
         {{MAIN_MESSAGE}}
         </h4>
+        <div id="treemap"></div>
         <table id="rounded-corner">
             <thead>
                 <tr>
