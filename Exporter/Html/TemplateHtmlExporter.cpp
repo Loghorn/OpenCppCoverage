@@ -109,7 +109,7 @@ namespace Exporter
 	const std::string TemplateHtmlExporter::ThirdPartyPathTemplate = "THIRD_PARTY_PATH";
 	const std::string TemplateHtmlExporter::OCCProjectLink = "OCC_PROJECT_LINK";
 	const std::string TemplateHtmlExporter::OCCVersion = "OCC_VERSION";
-	const std::string TemplateHtmlExporter::ActualProjectLink = "https://github.com/OpenCppCoverage/OpenCppCoverage/releases";
+	const std::string TemplateHtmlExporter::ActualProjectLink = "https://github.com/Loghorn/OpenCppCoverage/releases";
 
 	//-------------------------------------------------------------------------
 	TemplateHtmlExporter::TemplateHtmlExporter(
