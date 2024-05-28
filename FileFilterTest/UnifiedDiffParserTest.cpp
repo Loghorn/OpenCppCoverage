@@ -47,12 +47,12 @@ namespace FileFilterTest
 
 		//-------------------------------------------------------------------------
 		int GetSelectedLinesCount(
-			const std::vector<File>& files, 
+			const std::vector<File>& files,
 			const fs::path& path)
 		{
 			const auto& file = GetFile(files, path);
 			return static_cast<int>(file.GetSelectedLines().size());
-		}		
+		}
 
 		//---------------------------------------------------------------------------
 		void CheckEqual(const std::vector<File>& files1, const std::vector<File>& files2)
@@ -106,13 +106,13 @@ namespace FileFilterTest
 			const fs::path diffPath_{ GetFullPath(L"test.diff") };
 		};
 	}
-		
+
 	//-------------------------------------------------------------------------
 	TEST_F(UnifiedDiffParserTest, ExpectedFiles)
 	{
 		std::wifstream diffFile{ diffPath_.string() };
 		auto files = unifiedDiffParser_.Parse(diffFile);
-		
+
 		ASSERT_EQ(1, GetSelectedLinesCount(files, "CppCoverage/CodeCoverageRunner.cpp"));
 		ASSERT_EQ(3, GetSelectedLinesCount(files, "CppCoverage/CoverageData.cpp"));
 		ASSERT_EQ(2, GetSelectedLinesCount(files, "CppCoverage/CoverageData.hpp"));
@@ -139,28 +139,28 @@ namespace FileFilterTest
 
 		ASSERT_EQ(expectedLines, lines);
 	}
-	
+
 	//-------------------------------------------------------------------------
 	TEST_F(UnifiedDiffParserTest, ErrorNoFilenameBeforeHunks)
 	{
 		ASSERT_EQ(UnifiedDiffParserException::ErrorNoFilenameBeforeHunks,
 			GetError(L"@@"));
 	}
-	
+
 	//-------------------------------------------------------------------------
 	TEST_F(UnifiedDiffParserTest, ErrorCannotReadLine)
 	{
 		ASSERT_EQ(UnifiedDiffParserException::ErrorCannotReadLine,
 			GetError(UnifiedDiffParser::FromFilePrefix));
 	}
-	
+
 	//-------------------------------------------------------------------------
 	TEST_F(UnifiedDiffParserTest, ErrorExpectFromFilePrefix)
 	{
 		ASSERT_EQ(UnifiedDiffParserException::ErrorExpectFromFilePrefix,
 			GetError(UnifiedDiffParser::FromFilePrefix + L"\nXXX"));
 	}
-	
+
 	//-------------------------------------------------------------------------
 	TEST_F(UnifiedDiffParserTest, ErrorInvalidHunks)
 	{
@@ -214,12 +214,12 @@ namespace FileFilterTest
 		std::wifstream diffFile{ GetFullPath(L"test_add.diff").wstring() };
 		auto files = unifiedDiffParser_.Parse(diffFile);
 
-		GetFile(files, "FileFilter/stdafx.h");		
+		GetFile(files, "FileFilter/stdafx.h");
 	}
 
 	//-------------------------------------------------------------------------
 	TEST_F(UnifiedDiffParserTest, NoRange)
-	{		
+	{
 		std::wistringstream istr{	L"--- a/test\n"
 									L"+++ b/test\n"
 									L"@@ -1 +1 @@ Something\n"
@@ -230,11 +230,11 @@ namespace FileFilterTest
 		auto files = unifiedDiffParser_.Parse(istr);
 		AssertSingleFile(files, L"b/test", { 1 });
 	}
-	
+
 	//-------------------------------------------------------------------------
 	TEST_F(UnifiedDiffParserTest, FromRangeZero)
 	{
-		std::wistringstream istr{	
+		std::wistringstream istr{
 			L"--- test1.txt\n"
 			L"+++ test2.txt\n"
 			L"@@ -0,0 +1 @@\n"
@@ -247,7 +247,7 @@ namespace FileFilterTest
 	//-------------------------------------------------------------------------
 	TEST_F(UnifiedDiffParserTest, ToRangeZero)
 	{
-		std::wistringstream istr{ 
+		std::wistringstream istr{
 			L"--- test2.txt\n"
 			L"+++ test1.txt\n"
 			L"@@ -1 +0,0 @@\n"

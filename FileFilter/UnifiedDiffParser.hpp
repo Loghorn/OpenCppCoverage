@@ -30,8 +30,8 @@ namespace FileFilter
 		const static std::wstring ToFilePrefix;
 
 		UnifiedDiffParser() = default;
-				
-		std::vector<File> Parse(std::wistream&) const;		
+
+		std::vector<File> Parse(std::wistream&) const;
 
 	private:
 		UnifiedDiffParser(const UnifiedDiffParser&) = delete;
@@ -42,13 +42,13 @@ namespace FileFilter
 		struct HunksDifferences;
 		struct Stream;
 
-		std::filesystem::path ExtractTargetFile(Stream&) const;
+		std::filesystem::path ExtractTargetFile(const std::wstring&) const;
 		HunksDifferences ExtractHunksDifferences(
-							const Stream&, 
+							const Stream&,
 							const std::wstring& hunksDifferencesLine) const;
 
 		std::vector<int> ExtractUpdatedLines(
-							Stream&, 
+							Stream&,
 							const std::wstring& hunksDifferencesLine) const;
 
 		void ThrowError(const Stream&, const std::wstring&) const;

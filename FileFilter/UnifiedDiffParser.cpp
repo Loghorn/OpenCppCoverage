@@ -154,8 +154,19 @@ namespace FileFilter
 				foundGitHeader = true;
 			else if (boost::algorithm::starts_with(line, FromFilePrefix))
 			{
-				sourceFileLines.push_back(line);
-				files.emplace_back(ExtractTargetFile(stream));
+				std::wstring nextLine;
+				if (stream.GetLine(nextLine))
+				{
+					if (boost::algorithm::starts_with(nextLine, ToFilePrefix))
+					{
+						sourceFileLines.push_back(line);
+						files.emplace_back(ExtractTargetFile(nextLine));
+					}
+					else
+						ThrowError(stream, UnifiedDiffParserException::ErrorExpectFromFilePrefix);
+				}
+				else
+					ThrowError(stream, UnifiedDiffParserException::ErrorCannotReadLine);
 			}
 			else if (boost::algorithm::starts_with(line, L"@@"))
 				FillUpdatedLines(line, files, stream);
@@ -179,15 +190,8 @@ namespace FileFilter
 	}
 
 	//---------------------------------------------------------------------
-	std::filesystem::path UnifiedDiffParser::ExtractTargetFile(Stream& stream) const
+	std::filesystem::path UnifiedDiffParser::ExtractTargetFile(const std::wstring& line) const
 	{
-		std::wstring line;		
-		if (!stream.GetLine(line))
-			ThrowError(stream, UnifiedDiffParserException::ErrorCannotReadLine);
-		
-		if (!boost::algorithm::starts_with(line, ToFilePrefix))
-			ThrowError(stream, UnifiedDiffParserException::ErrorExpectFromFilePrefix);
-
 		const auto startIndex = ToFilePrefix.size();
 		const auto endIndex = line.find('\t');
 		
