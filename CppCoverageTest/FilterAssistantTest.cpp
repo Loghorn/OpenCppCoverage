@@ -17,7 +17,7 @@
 #include "stdafx.h"
 
 #include "CppCoverage/FilterAssistant.hpp"
-#include <boost/optional/optional.hpp>
+#include <optional>
 #include <filesystem>
 #include "FileSystemMock.hpp"
 
@@ -31,7 +31,7 @@ namespace
 	{
 		void (cov::FilterAssistant::*onNewFile)(const std::filesystem::path&,
 		                                        bool);
-		boost::optional<std::filesystem::path> (
+		std::optional<std::filesystem::path> (
 		    cov::FilterAssistant::*computeSuggestedFilter)() const;
 	};
 }
@@ -59,7 +59,7 @@ namespace CppCoverageTest
 		}
 
 		//---------------------------------------------------------------------
-		boost::optional<std::filesystem::path> ComputeSuggestedFilter() const
+		std::optional<std::filesystem::path> ComputeSuggestedFilter() const
 		{
 			return (*filterAssistant_.*GetParam().computeSuggestedFilter)();
 		}
@@ -72,7 +72,7 @@ namespace CppCoverageTest
 	//-------------------------------------------------------------------------
 	TEST_P(FilterAssistantTest, ComputeSuggestSourceFile)
 	{
-		ASSERT_EQ(boost::none, ComputeSuggestedFilter());
+		ASSERT_EQ(std::nullopt, ComputeSuggestedFilter());
 
 		AddFile("folder1/file1", 1, false);
 		AddFile("folder3/file3", 3, false);
@@ -84,7 +84,7 @@ namespace CppCoverageTest
 
 		AddFile("file4", 2, true);
 		AddFile("file5", 2, false);
-		ASSERT_EQ(boost::none, ComputeSuggestedFilter());
+		ASSERT_EQ(std::nullopt, ComputeSuggestedFilter());
 	}
 
 	//-------------------------------------------------------------------------

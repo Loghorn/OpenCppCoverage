@@ -235,7 +235,7 @@ namespace CppCoverageTest
 		auto option = TestTools::Parse(parser, 
 			{	TestTools::GetOptionPrefix() + cov::ProgramOptions::ExcludedLineRegexOption,
 				excludedLineRegex });
-		ASSERT_TRUE(option.is_initialized());
+		ASSERT_TRUE(option.has_value());
 		ASSERT_THAT(
 			option->GetExcludedLineRegexes(), 
 			testing::ElementsAre(Tools::LocalToWString(excludedLineRegex)));
@@ -244,7 +244,7 @@ namespace CppCoverageTest
 	namespace
 	{
 		//-------------------------------------------------------------------------
-		boost::optional<cov::Options> ParseSubstitutePdbSourcePath(
+		std::optional<cov::Options> ParseSubstitutePdbSourcePath(
 			const fs::path& pdbStartPath,
 			const fs::path& localPath)
 		{
@@ -267,7 +267,7 @@ namespace CppCoverageTest
 
 		const auto& option = ParseSubstitutePdbSourcePath(pdbStartPath, localPath);
 
-		ASSERT_TRUE(option.is_initialized());
+		ASSERT_TRUE(option.has_value());
 		const auto& substitutePdbSourcePaths = option->GetSubstitutePdbSourcePaths();
 		ASSERT_EQ(1, substitutePdbSourcePaths.size());
 		ASSERT_EQ(pdbStartPath.GetPath(),

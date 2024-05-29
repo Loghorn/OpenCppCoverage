@@ -230,7 +230,7 @@ index a318b33..81a9a10 100644
  			const std::wstring& filename,
 @@ -48,7 +47,8 @@ namespace CppCoverage
  
- 		boost::optional<unsigned char> MarkAddressAsExecuted(const Address&);
+ 		std::optional<unsigned char> MarkAddressAsExecuted(const Address&);
  
 -		CoverageData CreateCoverageData(const std::wstring& name, int exitCode);
 +		CoverageData CreateCoverageData(const std::wstring& name, int exitCode) const;
@@ -313,7 +313,7 @@ index 40565ce..7da8314 100644
 -		manager.AddModule(nullptr, L"");
 +		manager.SetCurrentModule(L"");
  
- 		ASSERT_EQ(boost::none, manager.MarkAddressAsExecuted(address));
+ 		ASSERT_EQ(std::nullopt, manager.MarkAddressAsExecuted(address));
  
 @@ -74,12 +74,11 @@ namespace CppCoverageTest
  		const char instructionLine43 = 11;

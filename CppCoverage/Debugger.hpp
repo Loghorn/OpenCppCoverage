@@ -16,8 +16,7 @@
 
 #pragma once
 
-#include <boost/optional/optional.hpp>
-
+#include <optional>
 #include <unordered_map>
 #include <Windows.h>
 #include "CppCoverageExport.hpp"
@@ -34,7 +33,7 @@ namespace CppCoverage
 		Debugger(
 			bool coverChildren,
 			bool continueAfterCppException,
-            bool stopOnAssert);
+			bool stopOnAssert);
 
 		int Debug(const StartInfo&, IDebugEventsHandler&);
 		size_t GetRunningProcesses() const;
@@ -43,7 +42,7 @@ namespace CppCoverage
 	private:
 		Debugger(const Debugger&) = delete;
 		Debugger& operator=(const Debugger&) = delete;
-	
+
 		void OnCreateProcess(
 			const DEBUG_EVENT& debugEvent,
 			IDebugEventsHandler& debugEventsHandler);
@@ -79,11 +78,11 @@ namespace CppCoverage
 	private:
 		std::unordered_map<DWORD, HANDLE> processHandles_;
 		std::unordered_map<DWORD, HANDLE> threadHandles_;
-		boost::optional<DWORD> rootProcessId_;
+		std::optional<DWORD> rootProcessId_;
 		bool coverChildren_;
 		bool continueAfterCppException_;
-        bool stopOnAssert_;
-    };
+		bool stopOnAssert_;
+	};
 }
 
 

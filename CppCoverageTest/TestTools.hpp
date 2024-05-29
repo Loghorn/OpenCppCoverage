@@ -39,7 +39,7 @@ namespace CppCoverageTest
 
 		void GetHandles(const std::filesystem::path&, T_HandlesFct);
 
-		boost::optional<CppCoverage::Options> Parse(
+		std::optional<CppCoverage::Options> Parse(
 			const CppCoverage::OptionsParser& parser,
 			const std::vector<std::string>& arguments,
 			bool appendProgramToRun = true,

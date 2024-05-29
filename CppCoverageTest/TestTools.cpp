@@ -68,7 +68,7 @@ namespace CppCoverageTest
 		}
 
 		//---------------------------------------------------------------------
-		boost::optional<cov::Options> Parse(
+		std::optional<cov::Options> Parse(
 			const cov::OptionsParser& parser,
 			const std::vector<std::string>& arguments,
 			bool appendProgramToRun,

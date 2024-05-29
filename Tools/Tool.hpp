@@ -18,9 +18,8 @@
 
 #include <string>
 #include <functional>
-
 #include <filesystem>
-#include <boost/optional/optional_fwd.hpp>
+#include <optional>
 
 #include "ToolsExport.hpp"
 
@@ -31,7 +30,7 @@ namespace Tools
 	TOOLS_DLL std::string ToLocalString(const std::wstring&);
 	TOOLS_DLL std::string ToUtf8String(const std::wstring&);
 
-	TOOLS_DLL boost::optional<std::wstring> Try(std::function<void()>);	
+	TOOLS_DLL std::optional<std::wstring> Try(std::function<void()>);	
 	
 	template <typename Exception, typename Fct>
 	decltype(auto)

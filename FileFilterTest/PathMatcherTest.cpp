@@ -16,7 +16,7 @@
 
 #include "stdafx.h"
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "FileFilter/PathMatcher.hpp"
 #include "FileFilter/File.hpp"
@@ -56,7 +56,7 @@ namespace FileFilterTest
 	{
 		std::vector<std::wstring> filenames = { L"Test.txt", L"Test\\Test2.txt" };
 		auto files = ToFiles(filenames);
-		PathMatcher pathMatcher{std::move(files), boost::none };
+		PathMatcher pathMatcher{std::move(files), std::nullopt };
 
 		ASSERT_EQ(filenames.at(0), Match(pathMatcher, "Test.txt"));
 		ASSERT_EQ(filenames.at(1), Match(pathMatcher, "Test\\Test\\Test2.txt"));
@@ -77,7 +77,7 @@ namespace FileFilterTest
 		const fs::path test2{ L"test2" / filename };
 		files.emplace_back(filename);
 		
-		PathMatcher pathMatcher{ std::move(files), boost::none };
+		PathMatcher pathMatcher{ std::move(files), std::nullopt };
 
 		Match(pathMatcher, test1);
 		
@@ -100,7 +100,7 @@ namespace FileFilterTest
 		std::vector<std::wstring> filenames{ L"test1", L"test2", L"test\\test2", L"test3" };
 		auto files = ToFiles(filenames);
 
-		PathMatcher pathMatcher{ std::move(files), boost::none };
+		PathMatcher pathMatcher{ std::move(files), std::nullopt };
 
 		pathMatcher.Match(filenames.at(1));
 		auto unmatchedPaths = pathMatcher.GetUnmatchedPaths();

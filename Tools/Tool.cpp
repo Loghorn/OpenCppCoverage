@@ -17,8 +17,7 @@
 #include "stdafx.h"
 #include "Tool.hpp"
 
-#include <boost/optional/optional.hpp>
-#include <cvt/wstring>
+#include <optional>
 #include <codecvt>
 #include <filesystem>
 #include <system_error>
@@ -43,7 +42,7 @@ namespace Tools
 
 			return fs::path{ &filename[0] };
 		}
-		
+
 		//-------------------------------------------------------------------------
 		std::string ToString(unsigned int pageCode, const std::wstring& str)
 		{
@@ -116,7 +115,7 @@ namespace Tools
 	}
 
 	//-------------------------------------------------------------------------
-	boost::optional<std::wstring> Try(std::function<void()> action)
+	std::optional<std::wstring> Try(std::function<void()> action)
 	{
 		try
 		{
@@ -131,12 +130,12 @@ namespace Tools
 			return std::wstring{L"Unkown exception"};
 		}
 
-		return boost::none;
+		return std::nullopt;
 	}
 
 	//-------------------------------------------------------------------------
 	void ShowOutputMessage(
-		const std::wstring& message, 
+		const std::wstring& message,
 		const std::filesystem::path& path)
 	{
 		LOG_INFO << GetSeparatorLine();
@@ -149,7 +148,7 @@ namespace Tools
 	{
 		return L"----------------------------------------------------";
 	}
-	
+
 	//---------------------------------------------------------------------
 	void CreateParentFolderIfNeeded(const std::filesystem::path& path)
 	{

@@ -17,7 +17,7 @@
 #include "stdafx.h"
 #include "HtmlExporter.hpp"
 
-#include <boost/optional/optional.hpp>
+#include <optional>
 #include <sstream>
 #include <iomanip>
 #include "CTemplate.hpp"
@@ -37,7 +37,7 @@
 namespace cov = CppCoverage;
 
 namespace Exporter
-{		
+{
 
 	namespace
 	{
@@ -51,7 +51,7 @@ namespace Exporter
 			return L"";
 		}
 	}
-	
+
 	//-------------------------------------------------------------------------
 	const std::wstring HtmlExporter::WarningExitCodeMessage = L"Warning: Your program has exited with error code: ";
 
@@ -77,9 +77,9 @@ namespace Exporter
 
 	//-------------------------------------------------------------------------
 	void HtmlExporter::Export(
-		const Plugin::CoverageData& coverageData, 
+		const Plugin::CoverageData& coverageData,
 		const std::filesystem::path& outputFolderPrefix)
-	{	
+	{
 		HtmlFolderStructure htmlFolderStructure{templateFolder_};
 		cov::CoverageRateComputer coverageRateComputer{ coverageData };
 
@@ -96,7 +96,7 @@ namespace Exporter
 		    *projectDictionary);
 
 		for (const auto& module : coverageRateComputer.SortModulesByCoverageRate())
-		{			
+		{
 			const auto& moduleCoverageRate = coverageRateComputer.GetCoverageRate(*module);
 
 			if (moduleCoverageRate.GetTotalLinesCount())
@@ -120,45 +120,45 @@ namespace Exporter
 
 		exporter_.GenerateProjectTemplate(*projectDictionary, outputFolder / L"index.html");
 		Tools::ShowOutputMessage(L"Coverage generated in Folder ", outputFolder);
-	}	
+	}
 
 	//---------------------------------------------------------------------
 	void HtmlExporter::ExportFiles(
 		cov::CoverageRateComputer& coverageRateComputer,
 		const Plugin::ModuleCoverage& module,
-		const HtmlFolderStructure& htmlFolderStructure, 
+		const HtmlFolderStructure& htmlFolderStructure,
 		ctemplate::TemplateDictionary& moduleTemplateDictionary)
 	{
 		exporter_.AddFileSectionToDictionary(
 			module.GetPath(),
 			coverageRateComputer.GetCoverageRate(module),
 			true,
-			nullptr, 
+			nullptr,
 			moduleTemplateDictionary);
 
 		for (const auto& file : coverageRateComputer.SortFilesByCoverageRate(module))
 		{
 			const auto& fileCoverageRate = coverageRateComputer.GetCoverageRate(*file);
-			boost::optional<fs::path> generatedOutput = ExportFile(htmlFolderStructure, *file);
+			std::optional<fs::path> generatedOutput = ExportFile(htmlFolderStructure, *file);
 			exporter_.AddFileSectionToDictionary(
-				file->GetPath(), 
-				fileCoverageRate, 
+				file->GetPath(),
+				fileCoverageRate,
 				false,
-				generatedOutput.get_ptr(), 
+				generatedOutput ? &generatedOutput.value() : nullptr,
 				moduleTemplateDictionary);
 		}
 	}
 
 	//---------------------------------------------------------------------
-	boost::optional<fs::path> HtmlExporter::ExportFile(
+	std::optional<fs::path> HtmlExporter::ExportFile(
 		const HtmlFolderStructure& htmlFolderStructure,
 		const Plugin::FileCoverage& fileCoverage) const
 	{
 		auto htmlFilePath = htmlFolderStructure.GetHtmlFilePath(fileCoverage.GetPath());
 		std::wostringstream ostr;
-		
+
 		if (!Tools::FileExists(fileCoverage.GetPath()))
-			return boost::optional<fs::path>();
+			return std::optional<fs::path>();
 
 		auto enableCodePrettify = fileCoverageExporter_.Export(fileCoverage, ostr);
 
@@ -167,6 +167,6 @@ namespace Exporter
 			title, ostr.str(), enableCodePrettify, htmlFilePath.GetAbsolutePath());
 
 		return htmlFilePath.GetRelativeLinkPath();
-	}	
+	}
 }
 

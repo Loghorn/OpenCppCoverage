@@ -20,7 +20,7 @@
 #include <vector>
 #include <memory>
 #include <filesystem>
-#include <boost/optional/optional_fwd.hpp>
+#include <optional>
 
 namespace FileFilter
 {
@@ -31,7 +31,7 @@ namespace FileFilter
 	public:
 		explicit PathMatcher(
 			std::vector<File>&&,
-			const boost::optional<std::filesystem::path>& parentPath);
+			const std::optional<std::filesystem::path>& parentPath);
 		~PathMatcher();
 
 		File* Match(const std::filesystem::path&);

@@ -18,7 +18,7 @@
 #include "CodeCoverageRunner.hpp"
 
 #include <sstream>
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "tools/Log.hpp"
 

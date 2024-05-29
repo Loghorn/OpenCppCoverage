@@ -88,7 +88,7 @@ namespace FileFilter
 
 		//---------------------------------------------------------------------
 		void RemoveDevNull(
-			std::vector<File>& files, 
+			std::vector<File>& files,
 			std::vector<std::wstring>& sourceFileLines)
 		{
 			EraseIf(files, [](const auto& file)
@@ -200,9 +200,9 @@ namespace FileFilter
 	}
 
 	//-------------------------------------------------------------------------
-	UnifiedDiffParser::HunksDifferences 
+	UnifiedDiffParser::HunksDifferences
 		UnifiedDiffParser::ExtractHunksDifferences(
-			const Stream& stream, 
+			const Stream& stream,
 			const std::wstring& hunksDifferencesLine) const
 	{
 		std::wstring range = L"(\\d+)(?:,(\\d+))?";
@@ -224,11 +224,11 @@ namespace FileFilter
 		}
 
 		ThrowError(stream, UnifiedDiffParserException::ErrorInvalidHunks);
-		return{}; 
+		return{};
 	}
-	
+
 	//-------------------------------------------------------------------------
-	std::vector<int> UnifiedDiffParser::ExtractUpdatedLines(		
+	std::vector<int> UnifiedDiffParser::ExtractUpdatedLines(
 		Stream& stream,
 		const std::wstring& hunksDifferencesLine) const
 	{
@@ -253,7 +253,7 @@ namespace FileFilter
 			ThrowError(stream, UnifiedDiffParserException::ErrorContextHunks);
 		return updatedLines;
 	}
-	
+
 	//-------------------------------------------------------------------------
 	void UnifiedDiffParser::ThrowError(const Stream& stream, const std::wstring& message) const
 	{

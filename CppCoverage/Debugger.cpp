@@ -45,15 +45,15 @@ namespace CppCoverage
 		ProcessStatus() = default;
 
 		ProcessStatus(
-			boost::optional<int> exitCode,
-			boost::optional<DWORD> continueStatus)
+			std::optional<int> exitCode,
+			std::optional<DWORD> continueStatus)
 			: exitCode_{ exitCode }
 			, continueStatus_{ continueStatus }
 		{
 		}
 
-		boost::optional<int> exitCode_;
-		boost::optional<DWORD> continueStatus_;
+		std::optional<int> exitCode_;
+		std::optional<DWORD> continueStatus_;
 	};
 
 	//-------------------------------------------------------------------------
@@ -76,11 +76,11 @@ namespace CppCoverage
 		process.Start((coverChildren_) ? DEBUG_PROCESS: DEBUG_ONLY_THIS_PROCESS);
 		
 		DEBUG_EVENT debugEvent;
-		boost::optional<int> exitCode;
+		std::optional<int> exitCode;
 
 		processHandles_.clear();
 		threadHandles_.clear();
-		rootProcessId_ = boost::none;
+		rootProcessId_ = std::nullopt;
 
 		while (!exitCode || !processHandles_.empty())
 		{
@@ -94,7 +94,7 @@ namespace CppCoverage
 			if (processStatus.exitCode_ && rootProcessId_ == debugEvent.dwProcessId && !exitCode)
 				exitCode = processStatus.exitCode_;
 
-			auto continueStatus = boost::get_optional_value_or(processStatus.continueStatus_, DBG_CONTINUE);
+			auto continueStatus = processStatus.continueStatus_.value_or(DBG_CONTINUE);
 
 			if (!ContinueDebugEvent(debugEvent.dwProcessId, debugEvent.dwThreadId, continueStatus))
 				THROW_LAST_ERROR("Error in ContinueDebugEvent:", GetLastError());
@@ -140,7 +140,7 @@ namespace CppCoverage
 			case EXIT_PROCESS_DEBUG_EVENT:
 			{
 				auto exitCode = OnExitProcess(debugEvent, hProcess, hThread, debugEventsHandler);
-				return ProcessStatus{exitCode, boost::none};
+				return ProcessStatus{exitCode, std::nullopt};
 			}
 			case EXIT_THREAD_DEBUG_EVENT: OnExitThread(dwThreadId); break;
 			case LOAD_DLL_DEBUG_EVENT:
@@ -179,7 +179,7 @@ namespace CppCoverage
 			case IDebugEventsHandler::ExceptionType::BreakPoint:
 			case IDebugEventsHandler::ExceptionType::SetThreadName:
 			{
-				return ProcessStatus{ boost::none, DBG_CONTINUE };
+				return ProcessStatus{ std::nullopt, DBG_CONTINUE };
 			}
 			case IDebugEventsHandler::ExceptionType::InvalidBreakPoint:
 			{
@@ -190,7 +190,7 @@ namespace CppCoverage
                 if (stopOnAssert_)
                 {
                   LOG_WARNING << "Stop on assertion.";
-                  return ProcessStatus{ boost::none, DBG_EXCEPTION_NOT_HANDLED };
+                  return ProcessStatus{ std::nullopt, DBG_EXCEPTION_NOT_HANDLED };
                 }
                 else
                 {
@@ -199,11 +199,11 @@ namespace CppCoverage
 			}
 			case IDebugEventsHandler::ExceptionType::NotHandled:
 			{
-				return ProcessStatus{ boost::none, DBG_EXCEPTION_NOT_HANDLED };
+				return ProcessStatus{ std::nullopt, DBG_EXCEPTION_NOT_HANDLED };
 			}
 			case IDebugEventsHandler::ExceptionType::Error:
 			{
-				return ProcessStatus{ boost::none, DBG_EXCEPTION_NOT_HANDLED };
+				return ProcessStatus{ std::nullopt, DBG_EXCEPTION_NOT_HANDLED };
 			}
 			case IDebugEventsHandler::ExceptionType::CppError:
 			{
@@ -213,7 +213,7 @@ namespace CppCoverage
 					LOG_WARNING << "Continue after a C++ exception.";
 					return ProcessStatus{ static_cast<int>(exceptionRecord.ExceptionCode), DBG_CONTINUE };
 				}
-				return ProcessStatus{ boost::none, DBG_EXCEPTION_NOT_HANDLED };
+				return ProcessStatus{ std::nullopt, DBG_EXCEPTION_NOT_HANDLED };
 			}
 		}
 		THROW("Invalid exception Type.");

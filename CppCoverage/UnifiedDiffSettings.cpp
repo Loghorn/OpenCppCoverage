@@ -22,7 +22,7 @@ namespace CppCoverage
 	//-------------------------------------------------------------------------
 	UnifiedDiffSettings::UnifiedDiffSettings(
 		const std::filesystem::path& unifiedDiffPath,
-		const boost::optional<std::filesystem::path>& rootDiffFolder)
+		const std::optional<std::filesystem::path>& rootDiffFolder)
 		: unifiedDiffPath_{unifiedDiffPath}
 		, rootDiffFolder_{rootDiffFolder}
 	{
@@ -35,7 +35,7 @@ namespace CppCoverage
 	}
 
 	//-------------------------------------------------------------------------
-	const boost::optional<std::filesystem::path>& UnifiedDiffSettings::GetRootDiffFolder() const
+	const std::optional<std::filesystem::path>& UnifiedDiffSettings::GetRootDiffFolder() const
 	{
 		return rootDiffFolder_;
 	}

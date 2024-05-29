@@ -140,15 +140,15 @@ namespace CppCoverageTest
 
 	//-------------------------------------------------------------------------
 	TEST(OptionsParserExportTest, ExistingExportPath)
-	{	
+	{
 		auto parser = CreateOptionParser();
 		TestHelper::TemporaryPath temporaryPath{ TestHelper::TemporaryPathOption::CreateAsFile };
 
-		std::string exportStr = cov::ExportOptionParser::ExportTypeHtmlValue + 
+		std::string exportStr = cov::ExportOptionParser::ExportTypeHtmlValue +
 			cov::ExportOptionParser::ExportSeparator + temporaryPath.GetPath().string();
-		auto options = TestTools::Parse(*parser, { TestTools::GetOptionPrefix() + cov::ExportOptionParser::ExportTypeOption, 
+		auto options = TestTools::Parse(*parser, { TestTools::GetOptionPrefix() + cov::ExportOptionParser::ExportTypeOption,
 								exportStr });
-		ASSERT_NE(nullptr, options.get_ptr());
+		ASSERT_NE(std::nullopt, options);
 	}
 
 	//-------------------------------------------------------------------------

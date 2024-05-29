@@ -17,7 +17,7 @@
 #include "stdafx.h"
 
 #include <fstream>
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "CppCoverage/ProgramOptions.hpp"
 #include "CppCoverage/Options.hpp"
@@ -35,7 +35,7 @@ namespace CppCoverageTest
 	namespace
 	{
 		//-------------------------------------------------------------------------	
-		boost::optional<cov::Options> MutipleSourceParse(
+		std::optional<cov::Options> MutipleSourceParse(
 			const std::vector<std::pair<std::string, std::wstring>>& configArguments,
 			const std::vector<std::pair<std::string, std::wstring>>& commandLineArguments)
 		{

@@ -58,7 +58,7 @@ namespace CppCoverage
 		}
 
 		//-------------------------------------------------------------------------
-		boost::optional<int> GetExecutableLineOrPreviousOne(
+		std::optional<int> GetExecutableLineOrPreviousOne(
 			int lineNumber,
 			const std::set<int>& executableLinesSet)
 		{
@@ -67,7 +67,7 @@ namespace CppCoverage
 			if (it != executableLinesSet.end() && *it == lineNumber)
 				return lineNumber;
 
-			return (it == executableLinesSet.begin()) ? boost::optional<int>{} : *(--it);
+			return (it == executableLinesSet.begin()) ? std::optional<int>{} : *(--it);
 		}
 
 		//-------------------------------------------------------------------------

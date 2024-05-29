@@ -31,7 +31,7 @@ namespace CppCoverageTest
 	namespace
 	{
 		//-------------------------------------------------------------------------
-		boost::optional<cov::Options> Parse(
+		std::optional<cov::Options> Parse(
 			const std::vector<cov::UnifiedDiffSettings>& unifiedDiffSettingsCollection)
 		{
 			cov::OptionsParser parser;
@@ -67,7 +67,7 @@ namespace CppCoverageTest
 		}
 
 		//-------------------------------------------------------------------------
-		boost::optional<cov::Options> Parse(cov::UnifiedDiffSettings&& unifiedDiffSettings)
+		std::optional<cov::Options> Parse(cov::UnifiedDiffSettings&& unifiedDiffSettings)
 		{
 			return Parse(ToVector(std::move(unifiedDiffSettings)));
 		}
@@ -110,13 +110,13 @@ namespace CppCoverageTest
 	//-------------------------------------------------------------------------
 	TEST_F(OptionsParserUnifiedDifftTest, UnifiedDiffPath)
 	{
-		CheckUnifiedDiffSettings({ temporaryPath, boost::none });
+		CheckUnifiedDiffSettings({ temporaryPath, std::nullopt });
 	}
 
 	//-------------------------------------------------------------------------
 	TEST_F(OptionsParserUnifiedDifftTest, NotFoundUnifiedDiffPath)
 	{
-		ASSERT_TRUE(!Parse({ "Unknow", boost::none }));
+		ASSERT_TRUE(!Parse({ "Unknow", std::nullopt }));
 	}
 
 	//-------------------------------------------------------------------------
@@ -128,7 +128,7 @@ namespace CppCoverageTest
 	//-------------------------------------------------------------------------
 	TEST_F(OptionsParserUnifiedDifftTest, NotFoundRootDiffFolder)
 	{
-		ASSERT_TRUE(!!Parse({ temporaryPath, boost::none }));
+		ASSERT_TRUE(!!Parse({ temporaryPath, std::nullopt }));
 		ASSERT_FALSE(!!Parse({ temporaryPath, fs::path("Unknow") }));
 	}
 
@@ -137,7 +137,7 @@ namespace CppCoverageTest
 	{
 		std::vector<cov::UnifiedDiffSettings> unifiedDiffSettingsCollection;
 		unifiedDiffSettingsCollection.emplace_back(temporaryPath, fs::current_path());
-		unifiedDiffSettingsCollection.emplace_back(temporaryPath, boost::none);
+		unifiedDiffSettingsCollection.emplace_back(temporaryPath, std::nullopt);
 
 		CheckUnifiedDiffSettings(unifiedDiffSettingsCollection);
 	}

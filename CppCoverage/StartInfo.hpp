@@ -19,7 +19,7 @@
 #include <string>
 #include <vector>
 #include <iosfwd>
-#include <boost/optional.hpp>
+#include <optional>
 #include <filesystem>
 
 #include "CppCoverageExport.hpp"
@@ -48,7 +48,7 @@ namespace CppCoverage
 	private:
 		std::filesystem::path path_;
 		std::vector<std::wstring> arguments_;
-		boost::optional<std::filesystem::path> workingDirectory_;
+		std::optional<std::filesystem::path> workingDirectory_;
 	};
 }
 

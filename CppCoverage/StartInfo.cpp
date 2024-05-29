@@ -80,7 +80,7 @@ namespace CppCoverage
 	const fs::path* StartInfo::GetWorkingDirectory() const
 	{
 		if (workingDirectory_)
-			return &workingDirectory_.get();
+			return &workingDirectory_.value();
 		return nullptr;
 	}
 

@@ -18,7 +18,7 @@
 
 #include <fstream>
 #include <sstream>
-#include <boost/optional/optional.hpp>
+#include <optional>
 #include "Tools/Log.hpp"
 #include "UnifiedDiffCoverageFilter.hpp"
 #include "UnifiedDiffParser.hpp"
@@ -51,7 +51,7 @@ namespace FileFilter
 	//-------------------------------------------------------------------------
 	UnifiedDiffCoverageFilter::UnifiedDiffCoverageFilter(
 		const std::filesystem::path& unifiedDiffPath,
-		const boost::optional<std::filesystem::path>& rootDiffFolder)
+		const std::optional<std::filesystem::path>& rootDiffFolder)
 		: UnifiedDiffCoverageFilter{ ParseUnifiedDiff(unifiedDiffPath), rootDiffFolder }
 	{
 	}
@@ -59,7 +59,7 @@ namespace FileFilter
 	//-------------------------------------------------------------------------
 	UnifiedDiffCoverageFilter::UnifiedDiffCoverageFilter(
 		std::vector<File>&& files,
-		const boost::optional<std::filesystem::path>& rootDiffFolder)
+		const std::optional<std::filesystem::path>& rootDiffFolder)
 		: pathMatcher_{ std::move(files), rootDiffFolder }
 		, lastFile_ {nullptr}
 	{
