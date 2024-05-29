@@ -51,4 +51,5 @@ IF EXIST vcpkg.exe GOTO VCPKG_EXISTS
 	boost-iostreams:x64-windows boost-iostreams:x86-windows ^
 	--nuget --nuget-id=ThirdParty --nuget-version=1.4.0
 
-downloads\tools\nuget-6.2.1-windows\nuget.exe install ThirdParty -Source %ROOT_FOLDER%\vcpkg -OutputDirectory ..\..\..\packages
+rem downloads\tools\nuget-6.2.1-windows\nuget.exe install ThirdParty -Source %ROOT_FOLDER%\vcpkg -OutputDirectory ..\..\..\packages
+..\..\..\nuget.exe install ThirdParty -Source %ROOT_FOLDER%\vcpkg -OutputDirectory ..\..\..\packages

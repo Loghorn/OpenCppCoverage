@@ -1,4 +1,4 @@
-// OpenCppCoverage is an open source code coverage for C++.
+﻿// OpenCppCoverage is an open source code coverage for C++.
 // Copyright (C) 2014 OpenCppCoverage
 //
 // This program is free software: you can redistribute it and/or modify

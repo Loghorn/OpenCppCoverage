@@ -131,7 +131,7 @@ namespace OpenCppCoverageTest
 	TEST(OpenCppCoverageConsoleTest, ExporterTest)
 	{
 		fs::path exporterTest{ OUT_DIR };
-		
+
 		exporterTest /= "ExporterTest.exe";
 		ASSERT_EQ(0, RunCoverageForProgram(exporterTest, {}));
 	}
