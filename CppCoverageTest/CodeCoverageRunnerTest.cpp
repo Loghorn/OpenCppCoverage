@@ -412,7 +412,7 @@ namespace CppCoverageTest
 	}
 
 	//-------------------------------------------------------------------------
-	TEST_F(CodeCoverageRunnerTest, OptimizedBuild)
+	TEST_F(CodeCoverageRunnerTest, DISABLED_OptimizedBuild)
 	{
 		CoverageArgs args{{}, L"OptimizedBuildVS2013", L"OptimizedBuildVS2013"};
 		auto optimizedBuildProjectPath = fs::path{ PROJECT_DIR } / "OptimizedBuildVS2013";

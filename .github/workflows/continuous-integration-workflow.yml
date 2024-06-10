@@ -46,7 +46,7 @@ jobs:
         run: msbuild /m CppCoverage.sln /p:Configuration=Debug /p:Platform=x64
 
       - name: Run CppCoverageTest
-        run: .\x64\Debug\CppCoverageTest.exe --gtest_filter=-CodeCoverageRunnerTest.OptimizedBuild # Require VS2013
+        run: .\x64\Debug\CppCoverageTest.exe
 
       - name: Run PluginTest
         run: .\x64\Debug\PluginTest.exe
