@@ -52,7 +52,7 @@ namespace CppCoverage
 		}
 
 		//-------------------------------------------------------------------------
-		boost::optional<OptionsExport> CreateExport(
+		std::optional<OptionsExport> CreateExport(
 		    const std::map<std::wstring, OptionsExportType>& exportTypes,
 		    const ExportData& exportData)
 		{
@@ -71,7 +71,7 @@ namespace CppCoverage
 				        : std::make_optional(exportOutputPath)};
 			}
 
-			return boost::none;
+			return std::nullopt;
 		}
 
 		//-------------------------------------------------------------------------

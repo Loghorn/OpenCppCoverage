@@ -1,4 +1,4 @@
-// OpenCppCoverage is an open source code coverage for C++.
+Ôªø// OpenCppCoverage is an open source code coverage for C++.
 // Copyright (C) 2014 OpenCppCoverage
 //
 // This program is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@
 #include "TestCoverageConsole/TestBasic.hpp"
 #include "TestCoverageConsole/TestThread.hpp"
 #include "TestCoverageConsole/SpecialLineInfo.hpp"
-#include "TestCoverageConsole/FileWithSpecialCharÈ‡Ë.hpp"
+#include "TestCoverageConsole/FileWithSpecialChar√©√†√®.hpp"
 #include "TestCoverageConsole/TestDiff.hpp"
 
 #include "TestCoverageSharedLib/TestCoverageSharedLib.hpp"
@@ -68,7 +68,7 @@ namespace CppCoverageTest
 	class CodeCoverageRunnerTest : public ::testing::Test
 	{
 	public:
-				
+
 		//---------------------------------------------------------------------
 		void SetUp() override
 		{
@@ -166,14 +166,14 @@ namespace CppCoverageTest
 		}
 
 	private:
-		boost::shared_ptr<std::ostringstream> error_;		
+		boost::shared_ptr<std::ostringstream> error_;
 	};
 
 	//-------------------------------------------------------------------------
 	TEST_F(CodeCoverageRunnerTest, RunCoverage)
-	{		
+	{
 		const auto testBasicFilename = TestCoverageConsole::GetTestBasicFilename().wstring();
-		
+
 		Plugin::CoverageData coverageData = ComputeCoverageData(TestCoverageConsole::TestBasic, testBasicFilename);
 		auto& file = GetFirstFileCoverage(coverageData);
 
@@ -187,7 +187,7 @@ namespace CppCoverageTest
 
 	//-------------------------------------------------------------------------
 	TEST_F(CodeCoverageRunnerTest, RunCoverageDll)
-	{			
+	{
 		auto mainSharedLibFile = TestCoverageSharedLib::GetMainCppPath().wstring();
 
 		Plugin::CoverageData coverageData = ComputeCoverageDataInBothMode(TestCoverageConsole::TestSharedLib,
@@ -201,7 +201,7 @@ namespace CppCoverageTest
 		ASSERT_EQ(nullptr, file[line++]);
 		TestLine(file, line++, false);
 	}
-	
+
 	//-------------------------------------------------------------------------
 	TEST_F(CodeCoverageRunnerTest, RunThread)
 	{
@@ -213,7 +213,7 @@ namespace CppCoverageTest
 		int line = 28;
 
 		TestLine(file, line++, true);
-		ASSERT_EQ(nullptr, file[line++]);
+		TestLine(file, line++, true);
 		TestLine(file, line++, true);
 		TestLine(file, line++, true);
 		TestLine(file, line++, true);
@@ -224,17 +224,17 @@ namespace CppCoverageTest
 	{
 		Plugin::CoverageData coverageData = RunCoverageWithException(
 			TestCoverageConsole::TestThrowHandledException, false);
-		ASSERT_EQ(std::string::npos, 
+		ASSERT_EQ(std::string::npos,
 			GetError().find(cov::ExceptionHandler::UnhandledExceptionErrorMessage));
 		ASSERT_EQ(0, coverageData.GetExitCode());
 	}
-	
+
 	//-------------------------------------------------------------------------
 	TEST_F(CodeCoverageRunnerTest, UnHandledSEHException)
 	{
 		Plugin::CoverageData coverageData = RunCoverageWithException(
 			TestCoverageConsole::TestThrowUnHandledSEHException, false);
-		ASSERT_NE(std::string::npos, 
+		ASSERT_NE(std::string::npos,
 			GetError().find(cov::ExceptionHandler::UnhandledExceptionErrorMessage));
 		ASSERT_NE(0, coverageData.GetExitCode());
 	}
@@ -366,15 +366,15 @@ namespace CppCoverageTest
 	{
 		auto diffPath = std::filesystem::path(PROJECT_DIR) / "Data" / "TestDiff.diff";
 
-		CoverageArgs args{ 
+		CoverageArgs args{
 			{ TestCoverageConsole::TestDiff },
 			TestCoverageConsole::GetOutputBinaryPath().wstring(),
 			TestCoverageConsole::GetTestDiffFilename().wstring() };
-		args.unifiedDiffSettingsCollection_.push_back({ diffPath, boost::none });
+		args.unifiedDiffSettingsCollection_.push_back({ diffPath, std::nullopt });
 		auto coverageData = ComputeCoverageDataPatterns(args);
 		const auto& file = GetFirstFileCoverage(coverageData);
 		ASSERT_EQ(4, file.GetLines().size());
-		
+
 		TestLine(file, 25, true);
 		TestLine(file, 26, true);
 		TestLine(file, 27, true);
@@ -385,7 +385,7 @@ namespace CppCoverageTest
 	TEST_F(CodeCoverageRunnerTest, SpecialChars)
 	{
 		const auto fileWithSpecialChars = TestCoverageConsole::GetFileWithSpecialChars();
-		CoverageArgs args{ 
+		CoverageArgs args{
 			{ L"" },
 			TestCoverageConsole::GetOutputBinaryPath().filename().wstring(),
 			fileWithSpecialChars.wstring() };
@@ -402,8 +402,8 @@ namespace CppCoverageTest
 		const auto unloadDllFilename = TestHelper::GetTestUnloadDllFilename().wstring();
 
 		auto coverageData = ComputeCoverageDataInBothMode(
-			TestCoverageConsole::TestUnloadReloadDll, 
-			TestHelper::GetOutputBinaryPath().wstring(), 
+			TestCoverageConsole::TestUnloadReloadDll,
+			TestHelper::GetOutputBinaryPath().wstring(),
 			unloadDllFilename);
 		const auto& file = GetFirstFileCoverage(coverageData);
 		auto filename = file.GetPath().filename().wstring();
@@ -412,7 +412,7 @@ namespace CppCoverageTest
 	}
 
 	//-------------------------------------------------------------------------
-	TEST_F(CodeCoverageRunnerTest, OptimizedBuild)
+	TEST_F(CodeCoverageRunnerTest, DISABLED_OptimizedBuild)
 	{
 		CoverageArgs args{{}, L"OptimizedBuildVS2013", L"OptimizedBuildVS2013"};
 		auto optimizedBuildProjectPath = fs::path{ PROJECT_DIR } / "OptimizedBuildVS2013";

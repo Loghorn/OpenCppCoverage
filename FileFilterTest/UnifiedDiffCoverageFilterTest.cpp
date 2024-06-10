@@ -16,7 +16,7 @@
 
 #include "stdafx.h"
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "FileFilter/UnifiedDiffCoverageFilter.hpp"
 #include "FileFilter/File.hpp"
@@ -27,14 +27,14 @@ using namespace FileFilter;
 namespace FileFilterTest
 {
 	namespace
-	{			
-		const std::vector<std::wstring> fileNames_{ L"file1", L"file2" };			
+	{
+		const std::vector<std::wstring> fileNames_{ L"file1", L"file2" };
 	}
 
 	//-------------------------------------------------------------------------
 	TEST(UnifiedDiffCoverageFilterTest, IsSourceFileSelected)
-	{			
-		UnifiedDiffCoverageFilter filter{ ToFiles(fileNames_), boost::none };
+	{
+		UnifiedDiffCoverageFilter filter{ ToFiles(fileNames_), std::nullopt };
 
 		ASSERT_TRUE(filter.IsSourceFileSelected(fileNames_.at(0)));
 		ASSERT_TRUE(filter.IsSourceFileSelected(fileNames_.at(0)));
@@ -49,7 +49,7 @@ namespace FileFilterTest
 		const auto line = 42;
 
 		files.at(0).AddSelectedLines({ line });
-		UnifiedDiffCoverageFilter filter{std::move(files), boost::none };
+		UnifiedDiffCoverageFilter filter{std::move(files), std::nullopt };
 
 		ASSERT_TRUE(filter.IsLineSelected(fileNames_.at(0), line));
 		ASSERT_FALSE(filter.IsLineSelected(fileNames_.at(0), line + 1));
@@ -62,10 +62,10 @@ namespace FileFilterTest
 	{
 		std::vector<std::wstring> filenames = { L"file1" };
 		auto files = ToFiles(filenames);
-				
-		UnifiedDiffCoverageFilter filter{ std::move(files), boost::none };
 
-		filter.IsSourceFileSelected(filenames.at(0));			
+		UnifiedDiffCoverageFilter filter{ std::move(files), std::nullopt };
+
+		filter.IsSourceFileSelected(filenames.at(0));
 		ASSERT_THROW(filter.IsSourceFileSelected(L"Test/" + filenames.at(0)), std::runtime_error);
 	}
 }

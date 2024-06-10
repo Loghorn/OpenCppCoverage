@@ -33,11 +33,11 @@ namespace FileFilter
 	public:
 		UnifiedDiffCoverageFilter(
 			const std::filesystem::path& unifiedDiffPath,
-			const boost::optional<std::filesystem::path>& rootDiffFolder);
+			const std::optional<std::filesystem::path>& rootDiffFolder);
 
 		UnifiedDiffCoverageFilter(
 			std::vector<File>&&,
-			const boost::optional<std::filesystem::path>& rootDiffFolder);
+			const std::optional<std::filesystem::path>& rootDiffFolder);
 
 		bool IsSourceFileSelected(const std::filesystem::path&);
 		bool IsLineSelected(const std::filesystem::path&, int lineNumber);

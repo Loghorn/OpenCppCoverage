@@ -17,7 +17,7 @@
 #include "stdafx.h"
 #include "ScopedAction.hpp"
 
-#include <boost/optional/optional.hpp>
+#include <optional>
 
 #include "Tool.hpp"
 

@@ -19,7 +19,7 @@
 #include "IFileSystem.hpp"
 
 #include <ctime>
-#include <boost/optional/optional.hpp>
+#include <optional>
 #include <filesystem>
 #include <memory>
 #include "ProgramOptions.hpp"
@@ -76,12 +76,12 @@ namespace CppCoverage
 		}
 
 		//-------------------------------------------------------------------------
-		boost::optional<std::filesystem::path> ComputeSuggestedFilter() const
+		std::optional<std::filesystem::path> ComputeSuggestedFilter() const
 		{
 			if (foundFile_)
-				return boost::none;
+				return std::nullopt;
 
-			boost::optional<std::filesystem::path> suggestedFilter;
+			std::optional<std::filesystem::path> suggestedFilter;
 			std::filesystem::file_time_type newest_modification_time;
 			for (const auto& file : files_)
 			{
@@ -129,7 +129,7 @@ namespace CppCoverage
 	}
 
 	//-------------------------------------------------------------------------
-	boost::optional<std::filesystem::path>
+	std::optional<std::filesystem::path>
 	FilterAssistant::ComputeSuggestedModuleFilter() const
 	{
 		return suggestedModuleFilter_->ComputeSuggestedFilter();
@@ -144,14 +144,14 @@ namespace CppCoverage
 	}
 
 	//-------------------------------------------------------------------------
-	boost::optional<std::filesystem::path>
+	std::optional<std::filesystem::path>
 	FilterAssistant::ComputeSuggestedSourceFileFilter() const
 	{
 		return suggestedSourceFileFilter_->ComputeSuggestedFilter();
 	}
 
 	//-------------------------------------------------------------------------
-	boost::optional<std::wstring> FilterAssistant::GetAdviceMessage() const
+	std::optional<std::wstring> FilterAssistant::GetAdviceMessage() const
 	{
 		auto suggestedModule = ComputeSuggestedModuleFilter();
 		if (suggestedModule)
@@ -179,6 +179,6 @@ namespace CppCoverage
 			    *suggestedSourceFile);
 		}
 
-		return boost::none;
+		return std::nullopt;
 	}
 }

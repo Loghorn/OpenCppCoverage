@@ -31,7 +31,7 @@ namespace CppCoverageTest
 	namespace
 	{
 		//-------------------------------------------------------------------------
-		boost::optional<cov::Options> Parse(
+		std::optional<cov::Options> Parse(
 			const std::string& optionName,
 			const std::wstring& value)
 		{
@@ -97,11 +97,11 @@ namespace CppCoverageTest
 				 cov::ProgramOptions::ExcludedModulesOption })
 		{
 			for (const auto& value : {L".", L"..", L"\\.", L"\\.\\"})
-				ASSERT_EQ(boost::none, Parse(optionName, value));
+				ASSERT_EQ(std::nullopt, Parse(optionName, value));
 			for (const auto& value : {L"test.txt", L"test\\test.txt"})
-				ASSERT_NE(boost::none, Parse(optionName, value));
+				ASSERT_NE(std::nullopt, Parse(optionName, value));
 
-			ASSERT_EQ(boost::none, Parse(optionName, L"SubFolder//Folder"));
+			ASSERT_EQ(std::nullopt, Parse(optionName, L"SubFolder//Folder"));
 		}
 	}
 }

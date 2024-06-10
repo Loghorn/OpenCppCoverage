@@ -88,7 +88,7 @@ namespace FileFilter
 
 		//---------------------------------------------------------------------
 		void RemoveDevNull(
-			std::vector<File>& files, 
+			std::vector<File>& files,
 			std::vector<std::wstring>& sourceFileLines)
 		{
 			EraseIf(files, [](const auto& file)
@@ -154,8 +154,19 @@ namespace FileFilter
 				foundGitHeader = true;
 			else if (boost::algorithm::starts_with(line, FromFilePrefix))
 			{
-				sourceFileLines.push_back(line);
-				files.emplace_back(ExtractTargetFile(stream));
+				std::wstring nextLine;
+				if (stream.GetLine(nextLine))
+				{
+					if (boost::algorithm::starts_with(nextLine, ToFilePrefix))
+					{
+						sourceFileLines.push_back(line);
+						files.emplace_back(ExtractTargetFile(nextLine));
+					}
+					else
+						ThrowError(stream, UnifiedDiffParserException::ErrorExpectFromFilePrefix);
+				}
+				else
+					ThrowError(stream, UnifiedDiffParserException::ErrorCannotReadLine);
 			}
 			else if (boost::algorithm::starts_with(line, L"@@"))
 				FillUpdatedLines(line, files, stream);
@@ -179,27 +190,19 @@ namespace FileFilter
 	}
 
 	//---------------------------------------------------------------------
-	std::filesystem::path UnifiedDiffParser::ExtractTargetFile(Stream& stream) const
+	std::filesystem::path UnifiedDiffParser::ExtractTargetFile(const std::wstring& line) const
 	{
-		std::wstring line;		
-		if (!stream.GetLine(line))
-			ThrowError(stream, UnifiedDiffParserException::ErrorCannotReadLine);
-		
-		if (!boost::algorithm::starts_with(line, ToFilePrefix))
-			ThrowError(stream, UnifiedDiffParserException::ErrorExpectFromFilePrefix);
-
 		const auto startIndex = ToFilePrefix.size();
 		const auto endIndex = line.find('\t');
-		
 		if (endIndex != std::string::npos)
 			return line.substr(startIndex, endIndex - startIndex);
 		return line.substr(startIndex);
 	}
 
 	//-------------------------------------------------------------------------
-	UnifiedDiffParser::HunksDifferences 
+	UnifiedDiffParser::HunksDifferences
 		UnifiedDiffParser::ExtractHunksDifferences(
-			const Stream& stream, 
+			const Stream& stream,
 			const std::wstring& hunksDifferencesLine) const
 	{
 		std::wstring range = L"(\\d+)(?:,(\\d+))?";
@@ -221,11 +224,11 @@ namespace FileFilter
 		}
 
 		ThrowError(stream, UnifiedDiffParserException::ErrorInvalidHunks);
-		return{}; 
+		return{};
 	}
-	
+
 	//-------------------------------------------------------------------------
-	std::vector<int> UnifiedDiffParser::ExtractUpdatedLines(		
+	std::vector<int> UnifiedDiffParser::ExtractUpdatedLines(
 		Stream& stream,
 		const std::wstring& hunksDifferencesLine) const
 	{
@@ -250,7 +253,7 @@ namespace FileFilter
 			ThrowError(stream, UnifiedDiffParserException::ErrorContextHunks);
 		return updatedLines;
 	}
-	
+
 	//-------------------------------------------------------------------------
 	void UnifiedDiffParser::ThrowError(const Stream& stream, const std::wstring& message) const
 	{

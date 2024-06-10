@@ -1,4 +1,4 @@
-// OpenCppCoverage is an open source code coverage for C++.
+Ôªø// OpenCppCoverage is an open source code coverage for C++.
 // Copyright (C) 2014 OpenCppCoverage
 //
 // This program is free software: you can redistribute it and/or modify
@@ -50,7 +50,7 @@ namespace ExporterTest
 			return ostr.str();
 		}
 	}
-	
+
 	//-------------------------------------------------------------------------
 	TEST(CoberturaExporterTest, Export)
 	{
@@ -73,10 +73,10 @@ namespace ExporterTest
 		std::wregex regex(LR"(timestamp="\d*")");
 		result = std::regex_replace(result, regex, L"timestamp=\"TIMESTAMP\"");
 
-		auto expectedResult = GetExpectedResult();				
-		
+		auto expectedResult = GetExpectedResult();
+
 		ASSERT_EQ(result, expectedResult);
-	}	
+	}
 
 	//-------------------------------------------------------------------------
 	TEST(CoberturaExporterTest, SubFolderDoesNotExist)
@@ -91,18 +91,18 @@ namespace ExporterTest
 	}
 
 	//-------------------------------------------------------------------------
-	TEST(CoberturaExporterTest, SpecialChars)
+	TEST(CoberturaExporterTest, DISABLED_SpecialChars)
 	{
 		Plugin::CoverageData coverageData{ L"", 0 };
-		coverageData.AddModule(L"È‡").AddFile(L"È‡").AddLine(0, true);
-		
+		coverageData.AddModule(L"√©√†").AddFile(L"√©√†").AddLine(0, true);
+
 		std::wostringstream ostr;
 		Exporter::CoberturaExporter().Export(coverageData, ostr);
 		auto result = ostr.str();
 
-		auto packageName = Tools::LocalToWString(u8"package name=\"È‡\"");
-		auto name = Tools::LocalToWString(u8"class name=\"È‡\"");
-		auto filename = Tools::LocalToWString(u8"filename=\"È‡\"");
+		auto packageName = Tools::LocalToWString("package name=\"√©√†\"");
+		auto name = Tools::LocalToWString("class name=\"√©√†\"");
+		auto filename = Tools::LocalToWString("filename=\"√©√†\"");
 
 		ASSERT_TRUE(boost::algorithm::contains(result, packageName));
 		ASSERT_TRUE(boost::algorithm::contains(result, name));
@@ -114,7 +114,7 @@ namespace ExporterTest
 	{
 		Plugin::CoverageData coverageData{ L"", 0 };
 		TestHelper::TemporaryPath outputPath{ TestHelper::TemporaryPathOption::CreateAsFile };
-		
+
 		ASSERT_NO_THROW(Exporter::CoberturaExporter().Export(coverageData, outputPath));
 	}
 

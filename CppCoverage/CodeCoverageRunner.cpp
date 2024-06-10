@@ -18,7 +18,7 @@
 #include "CodeCoverageRunner.hpp"
 
 #include <sstream>
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "tools/Log.hpp"
 
@@ -160,6 +160,12 @@ namespace CppCoverage
 
 				return IDebugEventsHandler::ExceptionType::CppError;
 			}
+			case CppCoverage::ExceptionHandlerStatus::SetThreadName:
+			{
+				LOG_ERROR << ostr.str();
+
+				return IDebugEventsHandler::ExceptionType::SetThreadName;
+			}
 		}
 
 		return IDebugEventsHandler::ExceptionType::NotHandled;
@@ -178,9 +184,17 @@ namespace CppCoverage
 
 		if (oldInstruction)
 		{
-			breakpoint_->RemoveBreakPoint(address, *oldInstruction);
-			breakpoint_->AdjustEipAfterBreakPointRemoval(hThread);
-			return true;
+			if (*oldInstruction != BreakPoint::breakPointInstruction)
+			{
+				breakpoint_->RemoveBreakPoint(address, *oldInstruction);
+				breakpoint_->AdjustEipAfterBreakPointRemoval(hThread);
+				return true;
+			}
+			else
+			{
+				// There was already a BP instruction here!
+				return false;
+			}
 		}
 
 		return false;

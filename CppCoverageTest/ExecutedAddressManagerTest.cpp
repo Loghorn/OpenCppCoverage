@@ -61,7 +61,7 @@ namespace CppCoverageTest
 
 		manager.AddModule(L"", nullptr);
 
-		ASSERT_EQ(boost::none, manager.MarkAddressAsExecuted(address));
+		ASSERT_EQ(std::nullopt, manager.MarkAddressAsExecuted(address));
 
 		manager.RegisterAddress(address, L"", 0, 0);
 		ASSERT_NO_THROW(manager.MarkAddressAsExecuted(address));

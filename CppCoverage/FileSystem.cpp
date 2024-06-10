@@ -18,17 +18,17 @@
 #include <system_error>
 
 #include "FileSystem.hpp"
-#include <boost/optional/optional.hpp>
+#include <optional>
 
 namespace CppCoverage
 {
 	//----------------------------------------------------------------------------
-	boost::optional<std::filesystem::file_time_type>
+	std::optional<std::filesystem::file_time_type>
 	FileSystem::GetLastWriteTime(const std::filesystem::path& path) const
 	{
 		std::error_code error;
 		auto time = std::filesystem::last_write_time(path, error);
 
-		return error ? boost::optional<std::filesystem::file_time_type>{} : time;
+		return error ? std::optional<std::filesystem::file_time_type>{} : time;
 	}
 }

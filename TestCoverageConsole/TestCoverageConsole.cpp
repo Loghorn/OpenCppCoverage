@@ -1,4 +1,4 @@
-// OpenCppCoverage is an open source code coverage for C++.
+Ôªø// OpenCppCoverage is an open source code coverage for C++.
 // Copyright (C) 2014 OpenCppCoverage
 //
 // This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@
 #include "TestCoverageConsole.hpp"
 #include "TestBasic.hpp"
 #include "TestThread.hpp"
-#include "FileWithSpecialCharÈ‡Ë.hpp"
+#include "FileWithSpecialChar√©√†√®.hpp"
 #include "TestDiff.hpp"
 
 namespace
@@ -43,6 +43,27 @@ namespace
 		{
 		}
 	}	
+
+	//-----------------------------------------------------------------------------
+	void ThrowUnhandledSetThreadName()
+	{
+		const DWORD MS_VC_EXCEPTION = 0x406D1388;
+#pragma pack(push,8)
+		typedef struct tagTHREADNAME_INFO
+		{
+			DWORD dwType; // Must be 0x1000.
+			LPCSTR szName; // Pointer to name (in user addr space).
+			DWORD dwThreadID; // Thread ID (-1=caller thread).
+			DWORD dwFlags; // Reserved for future use, must be zero.
+		} THREADNAME_INFO;
+#pragma pack(pop)
+		THREADNAME_INFO info;
+		info.dwType = 0x1000;
+		info.szName = "TestSetThreadName";
+		info.dwThreadID = -1;
+		info.dwFlags = 0;
+		RaiseException(MS_VC_EXCEPTION, 0, sizeof(info) / sizeof(ULONG_PTR), (ULONG_PTR*)&info);
+	}
 
 	//-----------------------------------------------------------------------------
 	void TestFileInSeveralModules()
@@ -89,6 +110,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			TestCoverageConsole::FilterByDiff();
 		else if (type == TestCoverageConsole::TestOptimizedBuild)
 			TestCoverageOptimizedBuild::TestOptimizedBuild();
+		else if (type == TestCoverageConsole::TestSetThreadNameException)
+			ThrowUnhandledSetThreadName();
 		else
 			std::wcerr << L"Unsupported type:" << type << std::endl;
 	}

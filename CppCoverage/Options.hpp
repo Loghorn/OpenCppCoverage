@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <filesystem>
 
 #include "CppCoverageExport.hpp"
@@ -43,7 +43,7 @@ namespace CppCoverage
 		Options(
 			const Patterns& modulePatterns,
 			const Patterns& sourcePatterns,
-			const StartInfo*);
+			const std::optional<StartInfo>& startInfo);
 		
 		Options(Options&&) = default;
 		~Options();
@@ -61,8 +61,8 @@ namespace CppCoverage
 		void EnableCoverChildrenMode();
 		bool IsCoverChildrenModeEnabled() const;
 
-        void EnableStopOnAssertMode();
-        bool IsStopOnAssertModeEnabled() const;
+		void EnableStopOnAssertMode();
+		bool IsStopOnAssertModeEnabled() const;
 
 		void DisableAggregateByFileMode();
 		bool IsAggregateByFileModeEnabled() const;
@@ -97,16 +97,16 @@ namespace CppCoverage
 	private:
 		Patterns modules_;
 		Patterns sources_;
-		boost::optional<StartInfo> optionalStartInfo_;
+		std::optional<StartInfo> optionalStartInfo_;
 
 		LogLevel logLevel_;
 		bool isPluginModeEnabled_;
 		bool isCoverChildrenModeEnabled_;
 		bool isAggregateByFileModeEnabled_;
 		bool isContinueAfterCppExceptionModeEnabled_;
-        bool isStopOnAssertModeEnabled_;
-        bool isOptimizedBuildSupportEnabled_;
-        std::vector<OptionsExport> exports_;
+		bool isStopOnAssertModeEnabled_;
+		bool isOptimizedBuildSupportEnabled_;
+		std::vector<OptionsExport> exports_;
 		std::vector<std::filesystem::path> inputCoveragePaths_;
 		std::vector<UnifiedDiffSettings> unifiedDiffSettingsCollection_;
 		std::vector<std::wstring> excludedLineRegexes_;

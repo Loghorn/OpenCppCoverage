@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <iosfwd>
 #include <map>
 #include <memory>
@@ -55,7 +55,7 @@ namespace CppCoverage
 		                       std::vector<std::unique_ptr<IOptionParser>>&&);
 		~OptionsParser();
 
-		boost::optional<Options> Parse(int argc, const char** argv, std::wostream* emptyOptionsExplanation) const;
+		std::optional<Options> Parse(int argc, const char** argv, std::wostream* emptyOptionsExplanation) const;
 				
 		static std::wstring GetTooLongCommandLineMessage();
 
@@ -65,7 +65,7 @@ namespace CppCoverage
 		OptionsParser(OptionsParser&&) = delete;
 		OptionsParser& operator=(OptionsParser&&) = delete;
 
-		boost::optional<Options> Parse(int argc, const char** argv) const;
+		std::optional<Options> Parse(int argc, const char** argv) const;
 		void ShowExplanation(std::wostream* emptyOptionsExplanation, const char* message) const;
 		
 		std::unique_ptr<ProgramOptions> programOptions_;

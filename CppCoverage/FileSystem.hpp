@@ -23,7 +23,7 @@ namespace CppCoverage
 	class FileSystem : public IFileSystem
 	{
 	  public:
-		boost::optional<std::filesystem::file_time_type>
+		std::optional<std::filesystem::file_time_type>
 		GetLastWriteTime(const std::filesystem::path&) const override;
 	};
 }

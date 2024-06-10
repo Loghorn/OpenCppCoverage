@@ -60,7 +60,7 @@ namespace Exporter
 		HtmlExporter(const HtmlExporter&) = delete;
 		HtmlExporter& operator=(const HtmlExporter&) = delete;
 
-		boost::optional<std::filesystem::path> ExportFile(
+		std::optional<std::filesystem::path> ExportFile(
 			const HtmlFolderStructure& htmlFolderStructure,
 			const Plugin::FileCoverage& fileCoverage) const;
 

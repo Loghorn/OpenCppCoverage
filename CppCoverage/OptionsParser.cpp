@@ -113,7 +113,7 @@ namespace CppCoverage
 		}
 
 		//---------------------------------------------------------------------
-		boost::optional<cov::StartInfo>
+		std::optional<cov::StartInfo>
 		GetStartInfo(const ProgramOptionsVariablesMap& variablesMap)
 		{
 			const auto* programToRun =
@@ -121,7 +121,7 @@ namespace CppCoverage
 			        ProgramOptions::ProgramToRunOption);
 
 			if (!programToRun)
-				return boost::none;
+				return std::nullopt;
 
 			cov::StartInfo startInfo{*programToRun};
 
@@ -183,13 +183,13 @@ namespace CppCoverage
 		}
 
 		//----------------------------------------------------------------------------
-		std::pair<fs::path, boost::optional<fs::path>>
+		std::pair<fs::path, std::optional<fs::path>>
 		ExtractUnifiedDiffOption(const std::string& option)
 		{
 			auto pos = option.find(OptionsParser::PathSeparator);
 
 			if (pos == std::string::npos)
-				return {option, boost::none};
+				return {option, std::nullopt};
 
 			return {option.substr(0, pos), fs::path{option.substr(pos + 1)}};
 		}
@@ -207,7 +207,7 @@ namespace CppCoverage
 				for (const auto& unifiedDiff : *unifiedDiffCollection)
 				{
 					fs::path unifiedDiffPath;
-					boost::optional<fs::path> rootDiffFolder;
+					std::optional<fs::path> rootDiffFolder;
 
 					std::tie(unifiedDiffPath, rootDiffFolder) =
 					    ExtractUnifiedDiffOption(unifiedDiff);
@@ -348,7 +348,7 @@ namespace CppCoverage
 	}
 
 	//-------------------------------------------------------------------------
-	boost::optional<Options>
+	std::optional<Options>
 	OptionsParser::Parse(int argc,
 	                     const char** argv,
 	                     std::wostream* emptyOptionsExplanation) const
@@ -371,7 +371,7 @@ namespace CppCoverage
 			ShowExplanation(emptyOptionsExplanation, e.what());
 		}
 
-		return boost::none;
+		return std::nullopt;
 	}
 
 	//-------------------------------------------------------------------------
@@ -386,7 +386,7 @@ namespace CppCoverage
 	}
 
 	//-------------------------------------------------------------------------
-	boost::optional<Options> OptionsParser::Parse(int argc,
+	std::optional<Options> OptionsParser::Parse(int argc,
 	                                              const char** argv) const
 	{
 		ProgramOptionsVariablesMap variablesMap;
@@ -402,7 +402,7 @@ namespace CppCoverage
 			ParseConfigFile(*programOptions_, variablesMap, *configFile);
 
 		if (variablesMap.IsOptionSelected(ProgramOptions::HelpOption))
-			return boost::none;
+			return std::nullopt;
 
 		auto modulePatterns =
 		    GetPatterns(variablesMap,
@@ -414,8 +414,7 @@ namespace CppCoverage
 		                ProgramOptions::ExcludedSourcesOption);
 
 		auto optionalStartInfo = GetStartInfo(variablesMap);
-		Options options{
-		    modulePatterns, sourcePatterns, optionalStartInfo.get_ptr()};
+		Options options{modulePatterns, sourcePatterns, optionalStartInfo};
 
 		bool isVerbose =
 		    variablesMap.IsOptionSelected(ProgramOptions::VerboseOption);

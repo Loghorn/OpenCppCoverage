@@ -33,14 +33,14 @@ namespace CppCoverage
 		~FilterAssistant();
 
 		void OnNewModule(const std::filesystem::path&, bool isSelected);
-		boost::optional<std::filesystem::path>
+		std::optional<std::filesystem::path>
 		ComputeSuggestedModuleFilter() const;
 
 		void OnNewSourceFile(const std::filesystem::path&, bool isSelected);
-		boost::optional<std::filesystem::path>
+		std::optional<std::filesystem::path>
 		ComputeSuggestedSourceFileFilter() const;
 
-		boost::optional<std::wstring> GetAdviceMessage() const;
+		std::optional<std::wstring> GetAdviceMessage() const;
 
 		static const std::wstring NoModulesSelectedMsg;
 		static const std::wstring NoSourceFilesSelectedMsg;

@@ -40,19 +40,18 @@ namespace CppCoverage
 	Options::Options(
 		const Patterns& modulePatterns,
 		const Patterns& sourcePatterns,
-		const StartInfo* startInfo)
+		const std::optional<StartInfo>& startInfo)
 		: modules_{modulePatterns}
-		, sources_{sourcePatterns}		
+		, sources_{sourcePatterns}
 		, logLevel_{ LogLevel::Normal }
 		, isPluginModeEnabled_{false}
 		, isCoverChildrenModeEnabled_{false}
 		, isAggregateByFileModeEnabled_{true}
 		, isContinueAfterCppExceptionModeEnabled_{false}
 		, isOptimizedBuildSupportEnabled_{false}
+		, optionalStartInfo_{startInfo}
 	{
-		if (startInfo)
-			optionalStartInfo_ = *startInfo;
-	}	
+	}
 
 	//-------------------------------------------------------------------------
 	Options::~Options() = default;
@@ -62,17 +61,17 @@ namespace CppCoverage
 	{
 		return modules_;
 	}
-	
+
 	//-------------------------------------------------------------------------
 	const Patterns& Options::GetSourcePatterns() const
 	{
 		return sources_;
 	}
-	
+
 	//-------------------------------------------------------------------------
 	const StartInfo* Options::GetStartInfo() const
 	{
-		return optionalStartInfo_.get_ptr();
+		return optionalStartInfo_ ? &optionalStartInfo_.value() : nullptr;
 	}
 
 	//-------------------------------------------------------------------------
@@ -128,7 +127,7 @@ namespace CppCoverage
 	{
 		isContinueAfterCppExceptionModeEnabled_ = true;
 	}
-	
+
     //-------------------------------------------------------------------------
 	bool Options::IsContinueAfterCppExceptionModeEnabled() const
 	{
@@ -140,7 +139,7 @@ namespace CppCoverage
     {
       isStopOnAssertModeEnabled_ = true;
     }
-    
+
     //-------------------------------------------------------------------------
     bool Options::IsStopOnAssertModeEnabled() const
     {
@@ -152,7 +151,7 @@ namespace CppCoverage
 	{
 		exports_.push_back(std::move(optionExport));
 	}
-	
+
 	//-------------------------------------------------------------------------
 	const std::vector<OptionsExport>& Options::GetExports() const
 	{
@@ -246,7 +245,7 @@ namespace CppCoverage
 		for (const auto& settings : options.unifiedDiffSettingsCollection_)
 		{
 			ostr << settings.GetUnifiedDiffPath() << L" Root folder: ";
-			ostr << settings.GetRootDiffFolder().get_value_or(L"") << " ";
+			ostr << settings.GetRootDiffFolder().value_or(L"") << " ";
 		}
 		ostr << std::endl;
 

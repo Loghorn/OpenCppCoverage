@@ -20,7 +20,7 @@
 #include "tools/Tool.hpp"
 
 #include "CppCoverageException.hpp"
-#include <boost/optional/optional.hpp>
+#include <optional>
 
 namespace CppCoverage
 {

@@ -47,7 +47,7 @@ namespace CppCoverageTest
 				files.emplace_back(std::move(file));
 			}
 			filters.push_back(std::make_unique<FileFilter::UnifiedDiffCoverageFilter>(
-				std::move(files), boost::none));
+				std::move(files), std::nullopt));
 
 			return filters;
 		}

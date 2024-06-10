@@ -17,7 +17,7 @@
 #pragma once
 
 #include <Windows.h>
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "CppCoverageExport.hpp"
 #include "StartInfo.hpp"
@@ -40,7 +40,7 @@ namespace CppCoverage
 		Process& operator=(const Process&) = delete;
 
 	private:
-		boost::optional<PROCESS_INFORMATION> processInformation_;
+		std::optional<PROCESS_INFORMATION> processInformation_;
 		const StartInfo startInfo_;
 	};
 }

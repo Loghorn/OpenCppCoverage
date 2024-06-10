@@ -27,10 +27,12 @@ namespace CppCoverage
 	const std::wstring ExceptionHandler::UnhandledExceptionErrorMessage =
 	    L"Your application has thrown an unhandled exception. Code: ";
 	const std::wstring ExceptionHandler::ExceptionCpp = L"Exception C++";
+	const std::wstring ExceptionHandler::ExceptionSetThreadName = L"MS_VC_EXCEPTION (set thread name)";
 	const std::wstring ExceptionHandler::ExceptionAccesViolation = L"EXCEPTION_ACCESS_VIOLATION";
 	const std::wstring ExceptionHandler::ExceptionUnknown = L"Unknown";
 	const int ExceptionHandler::ExceptionEmulationX86ErrorCode = 0x4000001f;
 	const int ExceptionHandler::CppExceptionErrorCode = 0xE06D7363;
+	const int ExceptionHandler::SetThreadNameExceptionErrorCode = 0x406D1388;
 
 	//-------------------------------------------------------------------------
 	ExceptionHandler::ExceptionHandler()
@@ -63,10 +65,11 @@ namespace CppCoverage
 		exceptionCode_.emplace(EXCEPTION_PRIV_INSTRUCTION, L"EXCEPTION_PRIV_INSTRUCTION");
 		exceptionCode_.emplace(EXCEPTION_SINGLE_STEP, L"EXCEPTION_SINGLE_STEP");
 		exceptionCode_.emplace(EXCEPTION_STACK_OVERFLOW, L"EXCEPTION_STACK_OVERFLOW");
-		
+
 		exceptionCode_.emplace(CppExceptionErrorCode, ExceptionCpp);
+		exceptionCode_.emplace(SetThreadNameExceptionErrorCode, ExceptionSetThreadName);
 	}
-	
+
 	//-------------------------------------------------------------------------
 	ExceptionHandlerStatus ExceptionHandler::HandleException(
 		HANDLE hProcess,
@@ -79,7 +82,7 @@ namespace CppCoverage
 		if (exceptionDebugInfo.dwFirstChance)
 		{
 			auto it = breakPointExceptionCode_.find(exceptionCode);
-			
+
 			if (it != breakPointExceptionCode_.end())
 			{
 				auto& processHandles = it->second;
@@ -92,18 +95,23 @@ namespace CppCoverage
 
 			return ExceptionHandlerStatus::FirstChanceException;
 		}
-				
+
 		message << std::endl << std::endl;
 		message << Tools::GetSeparatorLine() << std::endl;
 		message << L"*** ";
 		message << UnhandledExceptionErrorMessage << exceptionRecord.ExceptionCode;
 		message << L": " << GetExceptionStrFromCode(exceptionRecord.ExceptionCode) << std::endl;
 		message << Tools::GetSeparatorLine() << std::endl;
+		if (exceptionCode == SetThreadNameExceptionErrorCode)
+		{
+			message << L" Ignoring attempt to set thread name and continuing." << std::endl;
+			return ExceptionHandlerStatus::SetThreadName;
+		}
 		message << L"See https://github.com/OpenCppCoverage/OpenCppCoverage/wiki/FAQ";
 		message << L"#your-application-has-thrown-an-unhandled-exception-code-3221225477";
 		message << L"-exception_access_violation for additional information." << std::endl;
 
-		return (exceptionCode == CppExceptionErrorCode) 
+		return (exceptionCode == CppExceptionErrorCode)
 			? ExceptionHandlerStatus::CppError : ExceptionHandlerStatus::Error;
 	}
 
@@ -127,11 +135,11 @@ namespace CppCoverage
 
 		if (it != exceptionCode_.end())
 			return it->second;
-		
+
 		LPTSTR message = nullptr;
 		HMODULE ntDllModule = LoadLibrary(L"NTDLL.DLL");
 		Tools::ScopedAction closeLibrary{ [=](){ FreeLibrary(ntDllModule); } };
-	
+
 		FormatMessage(
 			FORMAT_MESSAGE_ALLOCATE_BUFFER |
 			FORMAT_MESSAGE_FROM_SYSTEM |
@@ -141,7 +149,7 @@ namespace CppCoverage
 			MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US),
 			reinterpret_cast<LPTSTR>(&message),
 			0,
-			nullptr);		
+			nullptr);
 		Tools::ScopedAction freeMessage{ [=](){ LocalFree(message); } };
 
 		if (message)

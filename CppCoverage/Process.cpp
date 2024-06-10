@@ -18,7 +18,7 @@
 #include "Process.hpp"
 
 #include <Windows.h>
-#include <boost/optional.hpp>
+#include <optional>
 
 #include "Tools/Log.hpp"
 #include "Tools/Tool.hpp"
@@ -31,21 +31,25 @@ namespace CppCoverage
 	namespace
 	{
 		//---------------------------------------------------------------------
-		boost::optional<std::vector<wchar_t>> 
+		std::optional<std::vector<wchar_t>> 
 			CreateCommandLine(const std::vector<std::wstring>& arguments)
 		{
-			boost::optional<std::vector<wchar_t>> commandLine;
+			std::optional<std::vector<wchar_t>> commandLine;
 
 			if (!arguments.empty())
 			{				
 				std::vector<wchar_t> buffer;
 				for (const auto& argument : arguments)
 				{
-					buffer.push_back(L'\"');
+					const bool ws = (argument.find_first_of(L" \t\r\n\f\v") != std::string::npos);
+					if (ws) {
+						buffer.push_back(L'\"');
+					}
 					buffer.insert(buffer.end(), argument.begin(), argument.end());
-					buffer.push_back(L'\"');
-					buffer.push_back(L' ');
-				}
+					if (ws) {
+						buffer.push_back(L'\"');
+					}
+					buffer.push_back(L' ');				}
 					
 				buffer.push_back(L'\0');
 				return buffer;
@@ -104,7 +108,7 @@ namespace CppCoverage
 			nullptr,
 			(workindDirectory) ? workindDirectory->c_str() : nullptr,
 			&lpStartupInfo,
-			&processInformation_.get()
+			&processInformation_.value()
 			))
 		{
 			std::wostringstream ostr;

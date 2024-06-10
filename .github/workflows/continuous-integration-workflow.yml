@@ -1,25 +1,58 @@
 name: Unit tests
-on: [push, pull_request]
+on: [push]
+concurrency: 
+  cancel-in-progress: true
+  group: Unit tests
 
 jobs:
   build:
     name: Unit tests
     runs-on: windows-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+      VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v4
+      
       - name: Install third party libraries
         run: ./InstallThirdPartyLibraries.ps1
 
+      # # Cache vcpkg installed packages to speed up the build  
+      # - name: Cache vcpkg installed packages
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: |  
+      #       !**/vcpkg_installed
+      #       **/vcpkg_installed
+      #     key: ${{ runner.os }}-vcpkg-${{ hashFiles('**/vcpkg.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-vcpkg-
+
+      - name: Export GitHub Actions cache environment variables  
+        uses: actions/github-script@v7
+        with:
+          script: |
+            core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
+            core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
+
+      - name: Build third party libraries      
+        run: ./BuildThirdPartyDependencies.bat
+  
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.0.0
+        uses: microsoft/setup-msbuild@v2
 
       - name: Build solution
         run: msbuild /m CppCoverage.sln /p:Configuration=Debug /p:Platform=x64
 
       - name: Run CppCoverageTest
-        run: .\x64\Debug\CppCoverageTest.exe --gtest_filter=-CodeCoverageRunnerTest.OptimizedBuild # Require VS2013
+        run: .\x64\Debug\CppCoverageTest.exe
+
+      - name: Run PluginTest
+        run: .\x64\Debug\PluginTest.exe
+
+      - name: Run ToolsTest
+        run: .\x64\Debug\ToolsTest.exe
 
       - name: Run ExporterTest
         run: .\x64\Debug\ExporterTest.exe
@@ -28,10 +61,4 @@ jobs:
         run: .\x64\Debug\FileFilterTest.exe --gtest_filter=-RelocationsExtractorTest.Extract # Require mspdbcore.dll
 
       - name: Run OpenCppCoverageTest
-        run: .\x64\Debug\OpenCppCoverageTest.exe
-
-      - name: Run PluginTest
-        run: .\x64\Debug\PluginTest.exe
-
-      - name: Run ToolsTest
-        run: .\x64\Debug\ToolsTest.exe
+        run: .\x64\Debug\OpenCppCoverageTest.exe --gtest_break_on_failure
